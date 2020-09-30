@@ -10,19 +10,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
-/**
- * influxdb连接工具
- */
+import static java.util.stream.Collectors.toList;
+
 public class InfluxDBHolder {
 
     private static Logger log = LoggerFactory.getLogger(InfluxDBHolder.class);
 
     static {
-        defaultInfluxDBConnect = init(InfluxdbProperties.getDefaultInfluxdbConfig());
+        InfluxdbProperties.InfluxdbConfig defaultInfluxdbConfig = InfluxdbProperties.getDefaultInfluxdbConfig();
+        if (null != defaultInfluxdbConfig) {
+            defaultInfluxDBConnect = init(InfluxdbProperties.getDefaultInfluxdbConfig());
+        } else {
+            log.warn("没有配置influxdb信息!");
+        }
     }
-
     public static String dataBase;
 
     private static InfluxDB influxDBConnect;
@@ -54,12 +56,9 @@ public class InfluxDBHolder {
         return influxDB;
     }
 
-    /**
-     * 配置InfluxDB 对象
-     */
     public static void setConnect(String key) {
         if (InfluxdbProperties.getDatabaseKeys().contains(key)) {
-            InfluxdbProperties.InfluxdbConfig influxdbConfig = InfluxdbProperties.getDatabase().stream().filter(data -> data.getKey().equals(key)).collect(Collectors.toList()).get(0);
+            InfluxdbProperties.InfluxdbConfig influxdbConfig = InfluxdbProperties.getDatabase().stream().filter(data -> data.getKey().equals(key)).collect(toList()).get(0);
             log.info("Influxdb切换至{}数据源", key);
             influxDBConnect = init(influxdbConfig);
         } else {

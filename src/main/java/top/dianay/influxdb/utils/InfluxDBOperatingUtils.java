@@ -20,13 +20,6 @@ import top.dianay.influxdb.InfluxdbProperties;
 import java.text.ParseException;
 import java.util.*;
 
-/**
- * influxDB 操作工具类
- * 
- * @author yzh
- * @version 创建时间：2020年2月27日
- * @Description
- */
 public class InfluxDBOperatingUtils {
 
 	private static Logger log = LoggerFactory.getLogger(InfluxDBOperatingUtils.class);
@@ -37,21 +30,7 @@ public class InfluxDBOperatingUtils {
 	public static final String timeField = "time";
 
 	private static Gson gson = new Gson();
-	
-	//private static TimeUnit timeUnit = InfluxdbProperties.timeUnit;
 
-	//private static InfluxDB ifdb = InfluxDBHolder.getConnect();
-	
-	//private static String dataBase = InfluxDBHolder.dataBase;
-
-	//public static final String def_dataTable = "collectData";
-
-	/**
-	 * 插入数据
-	 * @param measurement
-	 * @param tagMap
-	 * @param insertMap
-	 */
 	public static void insertData(String measurement,Map<String,String> tagMap,Map<String,Object> insertMap) {
 		if(insertInComeCheck(measurement,tagMap,insertMap)) {
 			Builder pointBuild = Point.measurement(measurement);
@@ -182,11 +161,7 @@ public class InfluxDBOperatingUtils {
 		return handleSearchResultData(qresult,null);
 	}
 	
-	/**
-	 * 查询返回数据处理 
-	 * @param qresult
-	 * @return
-	 */
+
 	private static List<Map<String,Object>> handleSearchResultData(QueryResult qresult,String dateFormula){
 		List<Map<String,Object>> reusltListMap = new ArrayList<>();
 		List<Result> resultList = qresult.getResults();
@@ -241,11 +216,7 @@ public class InfluxDBOperatingUtils {
 		return reusltListMap;
 	}
 	
-	/**
-	 * 查询结果日期字段处理
-	 * @param timeStr
-	 * @return
-	 */
+
 	private static Date findResultTimeFieldHandle(Object timeStr) {
 		Date handleResult = null;
 		try {
@@ -256,11 +227,7 @@ public class InfluxDBOperatingUtils {
 		return handleResult;
 	}
 	
-	/**
-	 * 插入日期处理
-	 * @param time
-	 * @return
-	 */
+
 	private static Long handleInsertTime(Object time) {
 		Long timeLong = null;
 		if(time instanceof Date) {
@@ -283,13 +250,7 @@ public class InfluxDBOperatingUtils {
 		return timeLong;
 	}
 	
-	/**
-	 * 插入数据检查
-	 * @param measurement
-	 * @param tagMap
-	 * @param insertMap
-	 * @return
-	 */
+
 	private static boolean insertInComeCheck(String measurement,Map<String,String> tagMap,Map<String,Object> insertMap) {
 		boolean checkResult = true;
 		if(StringUtils.isEmpty(measurement)) {

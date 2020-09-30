@@ -1,5 +1,6 @@
 package top.dianay.influxdb;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -8,10 +9,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-/**
- * influxdb 配置信息
- * Created by dian on 2020/9/25 16:18
- */
+
 @Configuration
 @ConfigurationProperties(prefix = "spring.influx")
 public class InfluxdbProperties {
@@ -21,7 +19,7 @@ public class InfluxdbProperties {
     /**
      * Influxdb数据库连接对象信息 集合
      */
-    private static List<InfluxdbConfig> database = new LinkedList<>();
+    private static List<InfluxdbConfig> database = new LinkedList<InfluxdbConfig>();
 
     public static List<InfluxdbConfig> getDatabase() {
         return database;
@@ -36,10 +34,15 @@ public class InfluxdbProperties {
     }
 
     public static InfluxdbConfig getDefaultInfluxdbConfig() {
-        return database.get(0);
+        if (CollectionUtils.isNotEmpty(database)) {
+            return database.get(0);
+        } else {
+            return null;
+        }
     }
 
     public static class InfluxdbConfig {
+
         String key;
         String url;
         String username;

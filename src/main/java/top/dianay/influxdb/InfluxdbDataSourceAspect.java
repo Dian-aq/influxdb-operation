@@ -10,16 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-/**
- * @Author: dian
- * @Date: 2020/9/28 11:38
- * @Description: Influxdb数据源切换
- */
 @Aspect
-@Order(-1) // 保证该AOP在@Transactional之前执行
+@Order(-1)
 @Component
 public class InfluxdbDataSourceAspect {
-    private static final Logger logger = LoggerFactory.getLogger(InfluxdbDataSourceAspect.class);
 
     /**
      * 设置切面范围
@@ -31,13 +25,12 @@ public class InfluxdbDataSourceAspect {
 
     @Before("pointCut() && @annotation(dataSource)")
     public void changeDataSource(JoinPoint point, InfluxdbDataSource dataSource) {
-        String key = dataSource.name();
+        String key = dataSource.value();
         InfluxDBHolder.setConnect(key);
     }
 
     @After("pointCut()")
     public void restoreDataSource() {
         InfluxDBHolder.removeDataSourceRouterKey();
-
     }
 }
